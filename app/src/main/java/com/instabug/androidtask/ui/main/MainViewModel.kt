@@ -2,12 +2,9 @@ package com.instabug.androidtask.ui.main
 
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkCapabilities
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.MutableLiveData
-import com.instabug.androidtask.data.repository.WordRepository
 import com.instabug.androidtask.data.model.Word
-import com.instabug.androidtask.data.remote.ContentTask
+import com.instabug.androidtask.data.repository.WordRepository
 import com.instabug.androidtask.data.repository.WordRepository.LoadWordsCallback
 import com.instabug.androidtask.ui.base.BaseViewModel
 
@@ -25,9 +22,10 @@ class MainViewModel internal constructor(private val wordRepository: WordReposit
     init {
         loadWords()
     }
+
     fun loadWords(keyword: String = "") {
         setIsLoading(true)
-        wordRepository!!.getWords(wordCallback, keyword, sortBy )
+        wordRepository!!.getWords(wordCallback, keyword, sortBy)
     }
 
 

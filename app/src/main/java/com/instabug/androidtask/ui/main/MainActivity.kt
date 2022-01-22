@@ -1,32 +1,30 @@
 package com.instabug.androidtask.ui.main
 
+import android.app.SearchManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.instabug.androidtask.R
 import com.instabug.androidtask.data.DataManager
 import com.instabug.androidtask.data.model.Word
 import com.instabug.androidtask.data.repository.WordRepository
 import com.instabug.androidtask.databinding.ActivityMainBinding
 import com.instabug.androidtask.ui.base.BaseActivity
-import com.instabug.androidtask.utils.networkRequest
-
-import android.app.SearchManager
-import androidx.appcompat.widget.SearchView
-import com.instabug.androidtask.R
 
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAdapter.WordListener {
     private var wordAdapter: WordAdapter? = null
 
-    var searchText =""
+    var searchText = ""
     override fun createViewModel(): MainViewModel {
         val wordRepository: WordRepository =
             DataManager.getInstance(context = applicationContext).wordRepository
@@ -39,6 +37,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAda
     override fun createViewBinding(layoutInflater: LayoutInflater?): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater!!)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +47,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAda
         binding!!.contentRV.adapter = wordAdapter
 
         val connectivityManager = getSystemService(ConnectivityManager::class.java)
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
         connectivityManager.requestNetwork(networkRequest, viewModel!!.networkCallback)
         observeViewModel()
         viewModel!!.loadWords()
@@ -65,7 +67,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAda
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 Toast.makeText(this@MainActivity, "Search for $query", Toast.LENGTH_SHORT).show()
                 viewModel!!.loadWords(query!!)
@@ -94,13 +96,21 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAda
 
             }
             R.id.sort -> {
-                if(viewModel!!.sortBy == "ASC"){
+                if (viewModel!!.sortBy == "ASC") {
                     viewModel!!.sortBy = "DESC"
 
-                    Toast.makeText(this@MainActivity, "The list is sorted by Descending", Toast.LENGTH_SHORT).show()
-                }else{
+                    Toast.makeText(
+                        this@MainActivity,
+                        "The list is sorted by Descending",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
                     viewModel!!.sortBy = "ASC"
-                    Toast.makeText(this@MainActivity, "The list is sorted by Ascending", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "The list is sorted by Ascending",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 viewModel!!.loadWords(searchText)
             }
@@ -112,11 +122,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAda
         viewModel!!.loadingLiveData.observe(
             this,
             {
-                if(it){
+                if (it) {
                     binding!!.progressBar.visibility = View.VISIBLE
-                } else{
+                } else {
                     binding!!.progressBar.visibility = View.GONE
-                    if(binding!!.swipeRefresher.isRefreshing){
+                    if (binding!!.swipeRefresher.isRefreshing) {
                         binding!!.swipeRefresher.isRefreshing = false
                     }
                 }
@@ -132,11 +142,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), WordAda
 
         })
 
-        viewModel!!.onlineLiveData.observe(this, {flag ->
-            if(flag){
+        viewModel!!.onlineLiveData.observe(this, { flag ->
+            if (flag) {
                 binding!!.connectionTextView.visibility = View.GONE
                 viewModel!!.loadWords()
-            }else{
+            } else {
                 binding!!.connectionTextView.visibility = View.VISIBLE
             }
         })

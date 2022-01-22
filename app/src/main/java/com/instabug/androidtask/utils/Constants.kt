@@ -9,14 +9,9 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.regex.Pattern
 
-const val BASE_URL = "https://www.instabug.com"
+var BASE_URL = "https://www.instabug.com"
 
-val networkRequest = NetworkRequest.Builder()
-    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-//    .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-//    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-//    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-    .build()
+
 fun MutableList<String>.fetchWords(): MutableList<Word>{
     if(this.isEmpty()){
         return mutableListOf()

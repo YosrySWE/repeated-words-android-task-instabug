@@ -23,6 +23,7 @@ class SqliteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $TBL_WORD"
     }
 
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SQL_CREATE_ENTRIES)
     }
