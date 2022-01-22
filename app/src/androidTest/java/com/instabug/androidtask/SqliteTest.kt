@@ -90,6 +90,7 @@ class SqliteTest {
         assertEquals("Mido", list[0].name)
     }
 
+    @Test
     fun testListIsSorted(){
         val sortBy = "DESC"
         dbQuery.deleteAllWords()
