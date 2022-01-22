@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@color/white"  />
+
+    <!-- Your product brand_logo - 144dp color version of your app icon -->
+    <item android:drawable="@drawable/ic_instabug" android:gravity="center" android:width="250dp" android:height="300dp">
+
+
+    </item>
+
+</layer-list>
